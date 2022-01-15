@@ -85,15 +85,6 @@ class UserSerializerTestCase(TestCase):
         instance = serializer.save()
         self.assertEquals(serializer.data['username'], instance.username)
 
-    def test_it_returns_validation_errors_when_password_and_confirm_password_does_not_exist_on_update(self):
-        self.data.pop('password')
-        self.data.pop('confirm_password')
-        user = UserFactory()
-        serializer = UserSerializer(data=self.data, instance=user, context={'is_created': True})
-        self.assertTrue(serializer.is_valid())
-        instance = serializer.save()
-        self.assertEquals(instance.username, self.data['username'])
-
     def test_it_raise_error_when_context_does_not_has_is_created(self):
         serializer = UserSerializer(data=self.data, instance=self.user)
         serializer.is_valid()

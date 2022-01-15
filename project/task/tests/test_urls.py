@@ -13,9 +13,9 @@ class ProductUrlsTestCase(TestCase):
         self.assertEquals(resolve(url).func.view_class, ProductCreateView)
 
     def test_user_login_url_resolves(self):
-        url = reverse('task:login')
+        url = reverse('login')
         self.assertEquals(resolve(url).func.view_class, UserLoginAPIView)
 
     def test_user_sign_up_url_resolves(self):
-        url = reverse('task:signup')
+        url = reverse('signup')
         self.assertEquals(resolve(url).func.view_class, UserSignupAPIView)

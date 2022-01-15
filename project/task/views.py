@@ -3,12 +3,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Q
+from django.contrib.auth import login
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
 from task.models import Product
 from task.serializers import UserSerializer, ProductSerializer, UserLoginSerializer
 
 
 class UserSignupAPIView(APIView):
+    serializer_class = UserSerializer
+
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data, context={'is_created': False})
         if serializer.is_valid():
@@ -17,16 +21,20 @@ class UserSignupAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
-class UserLoginAPIView(APIView):
-    serializer_class = UserSerializer
+class MyBasicAuthentication(BasicAuthentication):
 
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = UserLoginSerializer(data=data, context={'is_created': True})
-        if serializer.is_valid():
-            new_data = serializer.data
-            return Response(new_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+    def authenticate(self, request):
+        user, _ = super(MyBasicAuthentication, self).authenticate(request)
+        login(request, user)
+        return user, _
+
+
+class UserLoginAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        msg = {'message': f'Hi {request.user.username}! Congratulations on being authenticated!'}
+        return Response(msg, status=status.HTTP_200_OK)
 
 
 class ProductListView(APIView):

@@ -19,7 +19,7 @@ class UserSignupAPITestCase(TestCase):
             "confirm_password": "secret",
         }
         self.client = APIClient()
-        self.url = reverse('task:signup')
+        self.url = reverse('signup')
 
     def test_it_create_user_successfully(self):
         self.client.post(self.url, self.data)
@@ -95,19 +95,15 @@ class UserLoginTestCase(TestCase):
         self.user = UserFactory()
         self.product = ProductFactory()
         self.client.login(username=self.user.email, password='secret')
-        self.url = reverse('task:login')
+        self.url = reverse('login')
         self.data = {
             "email": "test@test.com",
             "password": "secret",
             "confirm_password": "secret",
         }
 
-    def test_it_returns_422_when_insert_invalid_data(self):
-        response = self.client.post(self.url, data={})
-        self.assertEquals(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
-
     def test_it_returns_200_status_code_when_updated_successfully(self):
-        response = self.client.post(self.url, self.data)
-        serializer = UserSerializer(instance=self.user, data=self.data)
+        response = self.client.get(self.url)
+        serializer = UserSerializer(data=self.data)
         serializer.is_valid()
         self.assertEquals(response.status_code, status.HTTP_200_OK)

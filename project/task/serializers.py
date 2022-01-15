@@ -7,8 +7,8 @@ from task.models import Product, User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)
-    confirm_password = serializers.CharField(write_only=True, required=False)
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
+    confirm_password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
 
     class Meta:
         model = get_user_model()
@@ -60,6 +60,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
 
     class Meta:
         model = get_user_model()
