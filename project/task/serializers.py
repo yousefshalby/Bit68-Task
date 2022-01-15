@@ -59,15 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
-
-    class Meta:
-        model = get_user_model()
-        fields = ['email', 'password']
-        extra_kwargs = {"password": {"write_only": True}}
-
-
 class ProductSerializer(serializers.ModelSerializer):
     seller = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 

@@ -3,14 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Q
-from django.contrib.auth import login
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
-
 from task.models import Product
-from task.serializers import UserSerializer, ProductSerializer, UserLoginSerializer
+from task.serializers import UserSerializer, ProductSerializer
 
 
-class UserSignupAPIView(APIView):
+class UserRegistrationAPIView(APIView):
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -19,14 +16,6 @@ class UserSignupAPIView(APIView):
             serializer.save()
             return Response({"user": serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-
-class MyBasicAuthentication(BasicAuthentication):
-
-    def authenticate(self, request):
-        user, _ = super(MyBasicAuthentication, self).authenticate(request)
-        login(request, user)
-        return user, _
 
 
 class UserLoginAPIView(APIView):
